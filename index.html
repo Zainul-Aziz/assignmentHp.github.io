@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Muli:ital,wght@0,400;1,200&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+    <div>
+      <div class="table table-responsive">
+        <table id="main_table" class="table table-bordered  table-striped table-hover text-center">
+            <thead class="thead-dark">
+              <th >Serial Number</th>
+              <th >Name</th>
+              <th >Update</th> 
+              <th >Delete</th>    
+            </thead>
+            <tbody>
+              <tr></tr>
+            </tbody>
+          
+        </table>
+        <div class="d-flex justify-content-center">
+          <button id="addButton" type="button" class="btn btn-dark mb-5" data-toggle="modal" data-target="#myModal">
+            Add User
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- The Modal For Adding User-->
+      <div class="modal fade" id="myModal">
+        <div class="modal-dialog" >
+          <div class="modal-content">
+          
+            <!-- Modal Header -->
+            <div class="modal-header">
+              <h4 class="modal-title" >Add User</h4>
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            
+            <!-- Modal body -->
+            <div class="modal-body">
+              <label for="name">Enter Name</label>
+              <input type="text" id="new_user" class="form-control" placeholder="Enter User Name" autocomplete="off" required>
+            </div>
+            
+            <!-- Modal footer -->
+            <div class="modal-footer">
+              <button type="button" id="okay_new" class="btn btn-success" data-dismiss="modal">okay</button>
+              <button type="button" class="btn btn-danger" data-dismiss="modal">cancel</button>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+      <div>
+        <a class="fa fa-arrow-up " href="#" id="mybtn"></a>
+      </div>
+    <footer id="foot" class="bg-dark">
+      <p><span> &copy; <a href="#">Fz.com</a> 2020</span></p>
+    </footer>
+    
+    <!--Script for maintaining serial number order-->
+    <script type="text/javascript">
+      function load()
+      {
+      var rows = main_table.getElementsByTagName("tr");
+      //alert(rows.length-2);
+
+      for(var i = 2; i<rows.length; i++)
+      {
+        document.getElementById("main_table").rows[i].cells[0].innerHTML = i-1;
+      }
+      }
+      </script>
+    
+      <!--Script for adding New User-->
+      <script type="text/javascript">
+      var count = 1;
+        $(document).ready(function(){
+            $('#okay_new').click(function(){
+                var user = document.getElementById('new_user').value;
+                if(user.length !== 0)
+                {
+                var table = document.getElementById('main_table');
+                var row = table.insertRow();
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+                var cell4 = row.insertCell(3);
+                cell1.innerHTML = count;
+                count+=1;
+                cell2.innerHTML = user;
+                cell3.innerHTML = '<i class="fa fa-pencil-square-o itag" id="editBtn" onclick="update(this)" data-toggle="modal" data-target="" ></i>';
+                cell4.innerHTML ='<i id="upbtn" class="fa fa-trash itag"  data-toggle="modal" data-target="" onclick="deleteRow(this);load();" ></i>';
+                var modal_input_field = document.getElementById("myModal");
+                modal_input_field.setAttribute("input","Enter User Name");
+                }
+                else
+                {
+                  alert("Username Cannot Be Empty.");
+                  return;
+                }
+            })    
+        });
+
+    </script>
+    <!--script for Deleting user-->
+    <script>
+        
+        function deleteRow(r) {
+            var j = r.parentNode.parentNode.rowIndex;
+            var active_name = document.getElementById("main_table").rows[j].cells[1].innerHTML;
+            var userconfirmation = confirm("Are You Sure To Delete " + active_name + " ? Click ok to Delete");
+            if(userconfirmation == true)
+            {
+                count = count-1;
+                var i = r.parentNode.parentNode.rowIndex;
+                document.getElementById("main_table").deleteRow(i);
+            }
+            else
+            {
+                return ;
+            }
+        }
+    </script>
+    <!--Script for updating user name-->
+    <script>
+        
+        function update(obj)
+        {
+          var j = obj.parentNode.parentNode.rowIndex;
+          var active_name = document.getElementById("main_table").rows[j].cells[1].innerHTML;
+            var new_user = prompt("Enter a new username:",active_name);
+            if(new_user.length > 0 && new_user !== active_name)
+            {
+            document.getElementById("main_table").deleteRow(j);
+            var table = document.getElementById('main_table');
+            var row = table.insertRow(j);
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+            var cell4 = row.insertCell(3);
+            cell1.innerHTML = j;
+            cell2.innerHTML = new_user;
+            cell3.innerHTML = '<i class="fa fa-pencil-square-o" onclick="update(this)" ></i>';
+            cell4.innerHTML ='<i class="fa fa-trash" onclick = "deleteRow(this);load();"></i>';
+            
+                var rows = main_table.getElementsByTagName("tr");
+                for(var i = 2; i<rows.length; i++)
+                {
+                    document.getElementById("main_table").rows[i].cells[0].innerHTML = i-1;
+                }
+            }
+
+            else if(new_user === active_name)
+            {
+              return;
+            }
+            
+            else
+            {
+                alert("Name cannot be empty");
+            }
+        }
+    </script>
+    <!--Script for adding scroll button at the bottom-->
+    <script type="text/javascript">
+        mybutton = document.getElementById("mybtn");
+        window.onscroll = function() { scrollFunction()};
+        function scrollFunction()
+        {
+            if(document.body.scrollTop > 130 || document.documentElement.scrollTop > 130) //// for chrome and internet explorer browser
+            {
+                mybutton.style.display = "block";
+            }
+            else
+            {
+                mybutton.style.display = "none";
+            }
+        }
+    </script>
+    
+</body>
+</html>
